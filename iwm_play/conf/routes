@@ -1,0 +1,15 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+POST        /temperatures                 controllers.Temperatures.save
+GET         /                             controllers.Application.index()
+GET         /temperatures                 controllers.Temperatures.view()
+GET         /temperatures/new             controllers.Temperatures.addNew()
+GET         /temperatures/:id/delete      controllers.Temperatures.delete(id: Int)
+GET         /newtemp                      controllers.Temperatures.save
+POST        /temperature                  controllers.Temperatures.addTemperature
+GET         /temperature                  controllers.Temperatures.addTemperatures(id: Int, date: String, temperature: Double)
+#GET         /temperature?:id&:date&:temperature                  controllers.Temperatures.addTemperatures(id: Int, date: String, temperature: Int)
+# Map static resources from the /public folder to the /assets URL path
+GET         /assets/*file          controllers.Assets.at(path="/public", file)

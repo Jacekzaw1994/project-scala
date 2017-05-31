@@ -1,0 +1,17 @@
+@(temperatureForm: Form[Temperature])
+@import helper._
+@import helper.twitterBootstrap._
+
+@main(Messages("application.name")) {
+    <h2>@Messages("temperature.edit.title")</h2>
+
+    @helper.form(action = routes.Temperatures.save()) {
+        <fieldset>
+            @helper.inputText(temperatureForm("id"))
+            @helper.inputText(temperatureForm("temp"))
+        </fieldset>
+        <p><input type="submit" class="btn primary"
+        value=@Messages("temperature.edit.submit")></p>
+    }
+}
+

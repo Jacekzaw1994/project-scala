@@ -1,0 +1,138 @@
+@(temperatures: List[Temperature])
+    @import helper._
+    @import helper.twitterBootstrap._
+
+    @main(Messages("application.name")) {
+        <h2 xmlns="http://www.w3.org/1999/html">@Messages("index.title")</h2>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="donation-meter">
+                    <strong class="goal"></strong>
+                    <span class="glass">
+                        <span class="amount"></span>
+                    </span>
+                    <div class="bulb">
+                        <span class="red-circle"></span>
+                        <span class="filler">
+                            <span></span>
+                        </span>
+                    </div>
+                </div>
+
+                <form action="@routes.Temperatures.addTemperature()" id="gettempform" method="GET">
+                    <input id="temp_id" name="id" type="hidden" placeholder="id">
+                    <input id="temp_date" name="date" type="hidden" placeholder="date">
+                    <input id="temp_temp" name="temperature" type="hidden" placeholder="temperatura">
+                    <input id="add_temp" type="submit" value="Dodaj odczyt">
+                </form>
+            </div>
+
+            <div class="col-md-3">
+                <h3 class="agregatAlert"></h3>
+                <span class="switch">
+                    <span class="switch-border1">
+                        <span class="switch-border2">
+                            <input id="switch2" type="checkbox" checked/>
+                            <label for="switch2"></label>
+                            <span class="switch-top"></span>
+                            <span class="switch-shadow"></span>
+                            <span class="switch-handle"></span>
+                            <span class="switch-handle-left"></span>
+                            <span class="switch-handle-right"></span>
+                            <span class="switch-handle-top"></span>
+                            <span class="switch-handle-bottom"></span>
+                            <span class="switch-handle-base"></span>
+                            <span class="switch-led switch-led-green">
+                                <span class="switch-led-border">
+                                    <span class="switch-led-light">
+                                        <span class="switch-led-glow"></span>
+                                    </span>
+                                </span>
+                            </span>
+                            <span class="switch-led switch-led-red">
+                                <span class="switch-led-border">
+                                    <span class="switch-led-light">
+                                        <span class="switch-led-glow"></span>
+                                    </span>
+                                </span>
+                            </span>
+                        </span>
+                    </span>
+                </span>
+            </div>
+            <div class="col-md-6">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Temperatura</th>
+                            <th>Data odczytu</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                    @for(temperature <- temperatures) {
+                        <tr>
+                            <td>@temperature.id</td>
+                            <td>@temperature.temp</td>
+                            <td>@temperature.date</td>
+                            <td><a href="@routes.Temperatures.delete(temperature.id)" class="btn btn-primary" role="button">Delete</a></td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <script>
+                $(document).ready(function () {
+                    var temperature;
+                    var i = 0;
+                    var flag = true;
+                    $('#switch2').addClass('active');
+                    $('#switch2').click();
+                    function myLoop() {
+                        var today = new Date();
+                        var dd = today.getDate();
+                        var mm = today.getMonth() + 1; //January is 0!
+                        var yyyy = today.getFullYear();
+                        if (dd < 10) {
+                            dd = '0' + dd
+                        }
+                        if (mm < 10) {
+                            mm = '0' + mm
+                        }
+                        today = mm + '/' + dd + '/' + yyyy;
+                        setTimeout(function () {
+                            temperature = vaweSinusoid(i);
+                            i += 0.25;
+                            $('span.amount').height(Math.floor(temperature / 35 * 100) + '%');
+                            $('#temp_id').val(4);
+                            $('#temp_date').val(today);
+                            $('#temp_temp').val(temperature);
+                            $('.goal').html(parseInt(temperature * 100) / 100 + ' &#x2103;');
+                            if (temperature < 31) {
+                                $('.agregatAlert').text("Agregat włączony");
+                                if (!$('#switch2').hasClass("active")) {
+                                    $('#switch2').click();
+                                    $('#switch2').addClass("active");
+                                }
+                            } else {
+                                $('.agregatAlert').text("Agregat wyłączony");
+                                if ($('#switch2').hasClass("active")) {
+                                    $('#switch2').click();
+                                    $('#switch2').removeClass("active");
+                                }
+                            }
+                            myLoop();
+                        }, 1500);
+
+                        function vaweSinusoid(x) {
+                            return Math.sin(x) * 5 + 30;
+                        }
+                    }
+
+                    myLoop();
+                });
+        </script>
+    }

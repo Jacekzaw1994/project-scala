@@ -1,0 +1,7 @@
+application.name = Temperature list
+index.title = Temperature list
+
+temperature.edit.title = Edit temperature
+temperature.edit.temp = Temperature
+temperature.edit.date.placeholder = Enter date
+temperature.edit.submit = Submit
